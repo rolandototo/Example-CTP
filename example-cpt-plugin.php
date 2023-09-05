@@ -8,6 +8,9 @@ Author: RolandoEscobar
 
 // Register Custom Post Type
 
+/**
+ * Registers the Example CPT.
+ */
 function register_example_cpt()
 {
     $args = array(
@@ -30,11 +33,20 @@ function register_example_cpt()
 add_action('init', 'register_example_cpt');
 
 // Register the custom meta field
+
+/**
+ * Registers the custom meta field.
+ */
 function register_example_meta()
 {
     add_meta_box('example_meta', 'Example Meta', 'example_meta_callback', 'example-cpt', 'normal', 'high');
 }
 
+/**
+ * The callback function for the custom meta box.
+ *
+ * @param $post The post object.
+ */
 function example_meta_callback($post)
 {
     $meta = get_post_meta($post->ID, 'example_meta', true);
@@ -47,6 +59,12 @@ function example_meta_callback($post)
 add_action('add_meta_boxes', 'register_example_meta');
 
 // Save the meta field
+
+/**
+ * Saves the custom meta field.
+ *
+ * @param $post_id The post ID.
+ */
 function save_example_meta($post_id)
 {
     if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) return;
@@ -57,6 +75,10 @@ function save_example_meta($post_id)
 add_action('save_post', 'save_example_meta');
 
 // Display the meta field and its values in the wp-json/wp/v2 rest api response for the CPT
+
+/**
+ * Registers the custom meta field in the REST API.
+ */
 function add_example_meta_to_rest_api()
 {
     register_rest_field('example-cpt', 'example_meta', array(
@@ -67,6 +89,15 @@ function add_example_meta_to_rest_api()
 }
 add_action('rest_api_init', 'add_example_meta_to_rest_api');
 
+/**
+ * Gets the value of the custom meta field.
+ *
+ * @param $object The REST API object.
+ * @param $field_name The name of the field.
+ * @param $request The REST API request.
+ *
+ * @return The value of the custom meta field.
+ */
 function get_example_meta($object, $field_name, $request)
 {
     return get_post_meta($object['id'], 'example_meta', true);
